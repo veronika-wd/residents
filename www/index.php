@@ -1,0 +1,55 @@
+<?php
+
+use DI\Container;
+use Slim\Factory\AppFactory;
+use Slim\Views\PhpRenderer;
+use Src\Controllers\ApartmentController;
+use Src\Controllers\ApiController;
+use Src\Controllers\BuildController;
+use Src\Controllers\ResidentController;
+
+require __DIR__ . '/vendor/autoload.php';
+
+session_start();
+
+$container = new Container();
+AppFactory::setContainer($container);
+$app = AppFactory::create();
+
+$container->set(PhpRenderer::class, function () {
+    return new PhpRenderer(__DIR__ . '/templates');
+});
+
+ORM::configure('mysql:host=database;dbname=docker');
+ORM::configure('username', 'docker');
+ORM::configure('password', 'docker');
+
+
+// CRUD residents
+$app->get('/residents', [ResidentController::class, 'index']);
+$app->get('/residents/create', [ResidentController::class, 'create']);
+$app->post('/residents/create', [ResidentController::class, 'store']);
+$app->get('/residents/{id}/edit', [ResidentController::class, 'edit']);
+$app->post('/residents/{id}/edit', [ResidentController::class, 'update']);
+$app->get('/residents/{id}', [ResidentController::class, 'destroy']);
+
+// CRUD builds
+$app->get('/builds', [BuildController::class, 'index']);
+$app->get('/builds/create', [BuildController::class, 'create']);
+$app->post('/builds/create', [BuildController::class, 'store']);
+$app->get('/builds/{id}/edit', [BuildController::class, 'edit']);
+$app->post('/builds/{id}/edit', [BuildController::class, 'update']);
+$app->get('/builds/{id}', [BuildController::class, 'destroy']);
+
+// CRUD apartments
+$app->get('/apartments', [ApartmentController::class, 'index']);
+$app->get('/apartments/create', [ApartmentController::class, 'create']);
+$app->post('/apartments/create', [ApartmentController::class, 'store']);
+$app->get('/apartments/{id}/edit', [ApartmentController::class, 'edit']);
+$app->post('/apartments/{id}/edit', [ApartmentController::class, 'update']);
+$app->get('/apartments/{id}', [ApartmentController::class, 'destroy']);
+
+$app->get('/api/apartments', [ApiController::class, 'getApartments']);
+$app->get('/api/buildings/{slug}', [ApiController::class, 'getBuildings']);
+
+$app->run();
