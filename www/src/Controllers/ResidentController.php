@@ -19,7 +19,10 @@ class ResidentController extends Controller
 
     public function create(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        return $this->renderer->render($response, 'residents/create.php');
+        $layouts = ORM::forTable('layouts')->findArray();
+        return $this->renderer->render($response, 'residents/create.php', [
+            'layouts' => $layouts
+        ]);
     }
 
     public function store(RequestInterface $request, ResponseInterface $response): ResponseInterface
@@ -28,13 +31,21 @@ class ResidentController extends Controller
         $address = $request->getParsedBody()['address'];
         $latitude = $request->getParsedBody()['latitude'];
         $longitude = $request->getParsedBody()['longitude'];
+        $layout_id = $request->getParsedBody()['layout'];
 
-        ORM::forTable('residents')->create([
+        $resident = ORM::forTable('residents')->create([
             'name' => $name,
             'address' => $address,
             'longitude' => $longitude,
             'latitude' => $latitude,
             'slug' => $this->slugify($name),
+        ]);
+
+        $resident->save();
+
+        ORM::forTable('resident_layouts')->create([
+            'layout_id' => $layout_id,
+            'resident_id' => $resident['id'],
         ])->save();
 
         return $response->withHeader('Location', "/residents")->withStatus(302);
@@ -43,9 +54,11 @@ class ResidentController extends Controller
     public function edit(RequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
     {
         $resident = ORM::forTable('residents')->find_one($args['id']);
+        $layouts = ORM::forTable('layouts')->findArray();
 
         return $this->renderer->render($response, 'residents/edit.php', [
-            'resident' => $resident
+            'resident' => $resident,
+            'layouts' => $layouts
         ]);
     }
 
@@ -55,13 +68,20 @@ class ResidentController extends Controller
         $address = $request->getParsedBody()['address'];
         $latitude = $request->getParsedBody()['latitude'];
         $longitude = $request->getParsedBody()['longitude'];
+        $layout_id = $request->getParsedBody()['layout'];
 
-        ORM::forTable('residents')->findOne($args['id'])->set([
+        $resident = ORM::forTable('residents')->findOne($args['id'])->set([
             'name' => $name,
             'address' => $address,
             'longitude' => $longitude,
             'latitude' => $latitude,
             'slug' => $this->slugify($name),
+        ]);
+        $resident->save();
+
+        ORM::forTable('resident_layouts')->create([
+            'layout_id' => $layout_id,
+            'resident_id' => $resident['id'],
         ])->save();
 
         return $response->withHeader('Location', "/residents")->withStatus(302);

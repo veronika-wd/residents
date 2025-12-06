@@ -18,6 +18,10 @@ class ApiController extends Controller
             ->where('resident_id', $resident['id'])
             ->findArray();
 
+        foreach ($layouts as &$layout) {
+            $layout['path'] = $_SERVER['SERVER_NAME'] . '/' . $layout['path'];
+        }
+
         $data = [
             'name' => $resident['name'],
             'address' => $resident['address'],
@@ -36,6 +40,8 @@ class ApiController extends Controller
 
     public function getApartments(RequestInterface $request, ResponseInterface $response)
     {
+        $data = [];
+
         $apartments = ORM::forTable('apartment_layouts')
             ->select('apartment_layouts.*')
             ->select('apartments.*')
@@ -44,9 +50,19 @@ class ApiController extends Controller
             ->join('layouts', 'layouts.id = apartment_layouts.layout_id')
             ->findArray();
 
-        $data = [
-            $apartments
-        ];
+        foreach ($apartments as $apartment) {
+            $images = ORM::forTable('apartment_images')
+                ->select('images.path')
+                ->join('images', 'images.id = apartment_images.image_id')
+                ->where('apartment_id', $apartment['apartment_id'])
+                ->findArray();
+
+            foreach ($images as $image) {
+                $apartment['images'][] = $_SERVER['SERVER_NAME'] . '/' . $image['path'];
+            }
+
+            $data[] = $apartment;
+        }
 
         $payload = json_encode($data);
 

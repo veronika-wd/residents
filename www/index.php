@@ -6,6 +6,8 @@ use Slim\Views\PhpRenderer;
 use Src\Controllers\ApartmentController;
 use Src\Controllers\ApiController;
 use Src\Controllers\BuildController;
+use Src\Controllers\ImageController;
+use Src\Controllers\LayoutController;
 use Src\Controllers\ResidentController;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -48,6 +50,22 @@ $app->post('/apartments/create', [ApartmentController::class, 'store']);
 $app->get('/apartments/{id}/edit', [ApartmentController::class, 'edit']);
 $app->post('/apartments/{id}/edit', [ApartmentController::class, 'update']);
 $app->get('/apartments/{id}', [ApartmentController::class, 'destroy']);
+
+// CRUD layouts
+$app->get('/layouts', [LayoutController::class, 'index']);
+$app->get('/layouts/create', [LayoutController::class, 'create']);
+$app->post('/layouts/create', [LayoutController::class, 'store']);
+$app->get('/layouts/{id}/edit', [LayoutController::class, 'edit']);
+$app->post('/layouts/{id}/edit', [LayoutController::class, 'update']);
+$app->get('/layouts/{id}', [LayoutController::class, 'destroy']);
+
+// CRUD images
+$app->get('/images', [ImageController::class, 'index']);
+$app->get('/images/create', [ImageController::class, 'create']);
+$app->post('/images/create', [ImageController::class, 'store']);
+$app->get('/images/{id}/edit', [ImageController::class, 'edit']);
+$app->post('/images/{id}/edit', [ImageController::class, 'update']);
+$app->get('/images/{id}', [ImageController::class, 'destroy']);
 
 $app->get('/api/apartments', [ApiController::class, 'getApartments']);
 $app->get('/api/buildings/{slug}', [ApiController::class, 'getBuildings']);

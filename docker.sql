@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: database:3306
--- Время создания: Дек 06 2025 г., 05:49
+-- Время создания: Дек 06 2025 г., 07:05
 -- Версия сервера: 8.4.4
 -- Версия PHP: 8.2.23
 
@@ -41,7 +41,11 @@ CREATE TABLE `apartments` (
 
 INSERT INTO `apartments` (`id`, `rooms`, `floor`, `price`, `build_id`) VALUES
 (2, 5, 5, 200, 1),
-(3, 2, 3, 500, 1);
+(3, 2, 3, 500, 1),
+(4, 5, 3, 200, 1),
+(5, 5, 3, 200, 1),
+(6, 3, 4, 5566, 1),
+(7, 3, 4, 5566, 1);
 
 -- --------------------------------------------------------
 
@@ -54,6 +58,13 @@ CREATE TABLE `apartment_images` (
   `apartment_id` int NOT NULL,
   `image_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Дамп данных таблицы `apartment_images`
+--
+
+INSERT INTO `apartment_images` (`id`, `apartment_id`, `image_id`) VALUES
+(4, 7, 3);
 
 -- --------------------------------------------------------
 
@@ -73,7 +84,10 @@ CREATE TABLE `apartment_layouts` (
 
 INSERT INTO `apartment_layouts` (`id`, `apartment_id`, `layout_id`) VALUES
 (1, 2, 1),
-(2, 3, 1);
+(2, 3, 1),
+(3, 5, 1),
+(4, 6, 1),
+(5, 7, 1);
 
 -- --------------------------------------------------------
 
@@ -107,6 +121,13 @@ CREATE TABLE `images` (
   `path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Дамп данных таблицы `images`
+--
+
+INSERT INTO `images` (`id`, `path`) VALUES
+(3, 'img/layout2.jpeg');
+
 -- --------------------------------------------------------
 
 --
@@ -123,7 +144,8 @@ CREATE TABLE `layouts` (
 --
 
 INSERT INTO `layouts` (`id`, `path`) VALUES
-(1, 'hvhh');
+(1, 'img/layout1.png'),
+(4, 'img/layout2.jpeg');
 
 -- --------------------------------------------------------
 
@@ -165,7 +187,9 @@ CREATE TABLE `resident_layouts` (
 --
 
 INSERT INTO `resident_layouts` (`id`, `resident_id`, `layout_id`) VALUES
-(1, 2, 1);
+(1, 2, 1),
+(2, 2, 1),
+(4, 2, 1);
 
 --
 -- Индексы сохранённых таблиц
@@ -184,7 +208,7 @@ ALTER TABLE `apartments`
 ALTER TABLE `apartment_images`
   ADD PRIMARY KEY (`id`),
   ADD KEY `apartment_id` (`apartment_id`),
-  ADD KEY `image_id` (`image_id`);
+  ADD KEY `apartment_images_ibfk_2` (`image_id`);
 
 --
 -- Индексы таблицы `apartment_layouts`
@@ -236,19 +260,19 @@ ALTER TABLE `resident_layouts`
 -- AUTO_INCREMENT для таблицы `apartments`
 --
 ALTER TABLE `apartments`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `apartment_images`
 --
 ALTER TABLE `apartment_images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `apartment_layouts`
 --
 ALTER TABLE `apartment_layouts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT для таблицы `builds`
@@ -260,25 +284,25 @@ ALTER TABLE `builds`
 -- AUTO_INCREMENT для таблицы `images`
 --
 ALTER TABLE `images`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT для таблицы `layouts`
 --
 ALTER TABLE `layouts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `residents`
 --
 ALTER TABLE `residents`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT для таблицы `resident_layouts`
 --
 ALTER TABLE `resident_layouts`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -295,7 +319,7 @@ ALTER TABLE `apartments`
 --
 ALTER TABLE `apartment_images`
   ADD CONSTRAINT `apartment_images_ibfk_1` FOREIGN KEY (`apartment_id`) REFERENCES `apartments` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `apartment_images_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `apartment_images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `apartment_images_ibfk_2` FOREIGN KEY (`image_id`) REFERENCES `images` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `apartment_layouts`

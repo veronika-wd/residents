@@ -14,6 +14,11 @@
     <input type="text" name="address" placeholder="Адресс">
     <input type="text" name="latitude" placeholder="Широта">
     <input type="text" name="longitude" placeholder="Долгота">
+    <select name="layout">
+        <?php foreach ($layouts as $layout): ?>
+        <option value="<?= $layout['id'] ?>"><?= $layout['path'] ?></option>
+        <?php endforeach;?>
+    </select>
     <input type="submit" value="Добавить">
 </form>
 </body>

@@ -24,9 +24,13 @@ class ApartmentController extends Controller
     public function create(RequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $builds = ORM::forTable('builds')->findMany();
+        $layouts = ORM::forTable('layouts')->findMany();
+        $images = ORM::forTable('images')->findMany();
 
         return $this->renderer->render($response, 'apartments/create.php', [
-            'builds' => $builds
+            'builds' => $builds,
+            'layouts' => $layouts,
+            'images' => $images,
         ]);
     }
 
@@ -36,12 +40,27 @@ class ApartmentController extends Controller
         $floor = $request->getParsedBody()['floor'];
         $price = $request->getParsedBody()['price'];
         $buildId = $request->getParsedBody()['build_id'];
+        $layout_id = $request->getParsedBody()['layout'];
+        $images = $_FILES['images'];
+        var_dump($images);
+        exit();
 
-        ORM::forTable('apartments')->create([
+        $apartment = ORM::forTable('apartments')->create([
             'rooms' => $rooms,
             'floor' => $floor,
             'price' => $price,
             'build_id' => $buildId,
+        ]);
+        $apartment->save();
+
+        ORM::forTable('apartment_layouts')->create([
+            'layout_id' => $layout_id,
+            'apartment_id' => $apartment['id'],
+        ])->save();
+
+        ORM::forTable('apartment_images')->create([
+            'image_id' => $image,
+            'apartment_id' => $apartment['id'],
         ])->save();
 
         return $response->withHeader('Location', "/apartments")->withStatus(302);
@@ -51,10 +70,14 @@ class ApartmentController extends Controller
     {
         $builds = ORM::forTable('builds')->findMany();
         $apartment = ORM::forTable('apartments')->findOne($args['id']);
+        $layouts = ORM::forTable('layouts')->findMany();
+        $images = ORM::forTable('images')->findMany();
 
         return $this->renderer->render($response, 'apartments/edit.php', [
             'builds' => $builds,
             'apartment' => $apartment,
+            'layouts' => $layouts,
+            'images' => $images,
         ]);
     }
 
@@ -64,12 +87,25 @@ class ApartmentController extends Controller
         $floor = $request->getParsedBody()['floor'];
         $price = $request->getParsedBody()['price'];
         $buildId = $request->getParsedBody()['build_id'];
+        $layout_id = $request->getParsedBody()['layout'];
+        $image = $request->getParsedBody()['image'];
 
-        ORM::forTable('apartments')->findOne($args['id'])->set([
+        $apartment = ORM::forTable('apartments')->findOne($args['id'])->set([
             'rooms' => $rooms,
             'floor' => $floor,
             'price' => $price,
             'build_id' => $buildId,
+        ]);
+        $apartment->save();
+
+        ORM::forTable('resident_layouts')->set([
+            'layout_id' => $layout_id,
+            'resident_id' => $apartment['id'],
+        ])->save();
+
+        ORM::forTable('apartment_images')->set([
+            'image_id' => $image,
+            'apartment_id' => $apartment['id'],
         ])->save();
 
         return $response->withHeader('Location', "/apartments")->withStatus(302);

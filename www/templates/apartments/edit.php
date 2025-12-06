@@ -13,6 +13,21 @@
     <input type="text" name="rooms" value="<?=$apartment['rooms']?>" placeholder="Комнаты">
     <input type="text" name="floor" value="<?=$apartment['floor']?>" placeholder="Этаж">
     <input type="text" name="price" value="<?=$apartment['price']?>" placeholder="Цена">
+    <select name="build_id">
+        <?php foreach ($builds as $build): ?>
+            <option value="<?= $build['id'] ?>"><?= $build['name'] ?></option>
+        <?php endforeach; ?>
+    </select>
+    <select name="layout">
+        <?php foreach ($layouts as $layout): ?>
+            <option value="<?= $layout['id'] ?>"><?= $layout['path'] ?></option>
+        <?php endforeach;?>
+    </select>
+    <select name="image">
+        <?php foreach ($images as $image): ?>
+            <option value="<?= $image['id'] ?>"><?= $image['path'] ?></option>
+        <?php endforeach;?>
+    </select>
     <input type="submit" value="Редактировать">
 </form>
 </body>
