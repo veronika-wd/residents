@@ -1,34 +1,47 @@
-<!doctype html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Редактировать квартиру</title>
-</head>
-<body>
-<h1>Редактировать квартиру</h1>
 <form action="/apartments/<?=$apartment['id']?>/edit" method="post">
-    <input type="text" name="rooms" value="<?=$apartment['rooms']?>" placeholder="Комнаты">
-    <input type="text" name="floor" value="<?=$apartment['floor']?>" placeholder="Этаж">
-    <input type="text" name="price" value="<?=$apartment['price']?>" placeholder="Цена">
-    <select name="build_id">
-        <?php foreach ($builds as $build): ?>
-            <option value="<?= $build['id'] ?>"><?= $build['name'] ?></option>
-        <?php endforeach; ?>
-    </select>
-    <select name="layout">
-        <?php foreach ($layouts as $layout): ?>
-            <option value="<?= $layout['id'] ?>"><?= $layout['path'] ?></option>
-        <?php endforeach;?>
-    </select>
-    <select name="image">
-        <?php foreach ($images as $image): ?>
-            <option value="<?= $image['id'] ?>"><?= $image['path'] ?></option>
-        <?php endforeach;?>
-    </select>
-    <input type="submit" value="Редактировать">
+    <h1 class="mb-3">Редактировать квартиру</h1>
+
+    <div class="mb-3">
+        <label for="rooms" class="form-label">Комнаты</label>
+        <input type="text" name="rooms" id="rooms" class="form-control" value="<?=$apartment['rooms']?>" placeholder="Комнаты">
+    </div>
+
+    <div class="mb-3">
+        <label for="floor" class="form-label">Этаж</label>
+        <input type="text" name="floor" id="floor" class="form-control" value="<?=$apartment['floor']?>" placeholder="Этаж">
+    </div>
+
+    <div class="mb-3">
+        <label for="price" class="form-label">Цена</label>
+        <input type="text" name="price" id="price" class="form-control" value="<?=$apartment['price']?>" placeholder="Цена">
+    </div>
+
+    <div class="mb-3">
+        <label for="build_id" class="form-label">Строение</label>
+        <select name="build_id" id="build_id" class="form-select">
+            <?php foreach ($builds as $build): ?>
+                <option value="<?= $build['id'] ?>"><?= $build['name'] ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="layout" class="form-label">Планировка</label>
+        <select name="layout" id="layout" class="form-select">
+            <?php foreach ($layouts as $layout): ?>
+                <option value="<?= $layout['id'] ?>"><?= $layout['path'] ?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="image" class="form-label">Фото</label>
+        <select name="image" id="image" class="form-select">
+            <?php foreach ($images as $image): ?>
+                <option value="<?= $image['id'] ?>"><?= $image['path'] ?></option>
+            <?php endforeach;?>
+        </select>
+    </div>
+
+    <input type="submit" value="Редактировать" class="btn btn-success">
 </form>
-</body>
-</html>
